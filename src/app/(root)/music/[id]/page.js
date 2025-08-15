@@ -76,8 +76,8 @@ const MusicPage = () => {
   };
 
   return (
-    <div className="w-full flex flex-col">
-      <div className="w-full flex flex-col xl:flex-row items-center gap-[24px] lg:gap-[32px]">
+    <div className="w-full flex flex-col mb-[185px]">
+      <div className="w-full flex flex-col xl:flex-row items-center gap-[24px] lg:gap-[32px] mb-6 lg:mb-8">
         <div className="w-full max-w-[881px] flex flex-col gap-10 lg:gap-[84px]">
           <div className="w-full flex items-center gap-3 lg:gap-6">
             {/* play / pause button */}
@@ -149,6 +149,195 @@ const MusicPage = () => {
           height={362}
           className="w-[343px] h-[219px] lg:w-[415px] lg:h-[362px] rounded-xl"
         />
+      </div>
+      {/*  */}
+      <div className="w-full flex flex-col xl:flex-row items-center gap-[24px] lg:gap-[32px]">
+        <div
+          className="w-full max-w-[881px] rounded-xl flex flex-col p-[12px] lg:px-5 lg:py-3"
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.44)",
+          }}
+        >
+          {/* mcap */}
+          <div className="w-full h-[66px] border-b border-[#CECFD0] flex items-center justify-between">
+            <div className="min-w-[65px] flex items-center gap-1.5">
+              <Image
+                src="/assets/icons/globe.svg"
+                alt="heart"
+                width={18}
+                height={18}
+                className="w-4.5 h-4.5"
+              />
+              <p className="text-[14px] font-archivo font-[400] leading-[1.25] text-[#575959]">
+                MCAP
+              </p>
+            </div>
+            <h2 className="text-[24px] font-archivo font-[400] leading-[1.15] text-[#040708]">
+              $4K
+            </h2>
+          </div>
+          {/* royalties */}
+          <div className="w-full h-[66px] border-b border-[#CECFD0] flex items-center justify-between">
+            <div className="min-w-[65px] flex items-center gap-1.5">
+              <Image
+                src="/assets/icons/tag.svg"
+                alt="tag"
+                width={18}
+                height={18}
+                className="w-4.5 h-4.5"
+              />
+              <p className="text-[14px] font-archivo font-[400] leading-[1.25] text-[#575959]">
+                Royalitites
+              </p>
+            </div>
+            <h2 className="text-[24px] font-archivo font-[400] leading-[1.15] text-[#040708]">
+              5%
+            </h2>
+          </div>
+          {/* shopping-cart */}
+          <div className="w-full h-[66px] border-b border-[#CECFD0] flex items-center justify-between">
+            <div className="min-w-[65px] flex items-center gap-1.5">
+              <Image
+                src="/assets/icons/shopping-cart.svg"
+                alt="heart"
+                width={18}
+                height={18}
+                className="w-4.5 h-4.5"
+              />
+              <p className="min-w-[96px]text-[14px] font-archivo font-[400] leading-[1.25] text-[#575959]">
+                Price
+              </p>
+            </div>
+            <h2 className="text-[24px] font-archivo font-[400] leading-[1.15] text-[#040708]">
+              $150
+            </h2>
+          </div>
+
+          {/* building-2.svg */}
+          <div className="w-full h-[66px] border-b border-[#CECFD0] flex items-center justify-between">
+            <div className="min-w-[65px] flex items-center gap-1.5">
+              <Image
+                src="/assets/icons/building-2.svg"
+                alt="heart"
+                width={18}
+                height={18}
+                className="w-4.5 h-4.5"
+              />
+              <p className="min-w-[96px] text-[14px] font-archivo font-[400] leading-[1.25] text-[#575959]">
+                Contract address
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <p className="overflow-hidden text-ellipsis w-[156px] lg:w-[375px] text-[16px] font-archivo font-[400] leading-[1.15] text-[#040708]">
+                0x5B3eD4E3d896dDaF2BbFAD49C7A16f40A51B4Af1
+              </p>
+              <Image
+                src={"/assets/icons/copy-2.svg"}
+                alt="heart"
+                width={18}
+                height={18}
+                className="w-4.5 h-4.5"
+              />
+            </div>
+          </div>
+
+          {/* web link */}
+          <div className="w-full h-[66px] border-b border-[#CECFD0] flex items-center justify-between">
+            <div className="min-w-[65px] flex items-center gap-1.5">
+              <Image
+                src="/assets/icons/link-2.svg"
+                alt="heart"
+                width={18}
+                height={18}
+                className="w-4.5 h-4.5"
+              />
+              <p className="min-w-[96px] text-[14px] font-archivo font-[400] leading-[1.25] text-[#575959]">
+                Web link
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <p className="overflow-hidden text-ellipsismin-w-[156px] lg:min-w-[176px] text-[16px] font-archivo font-[400] leading-[1.15] text-[#040708]">
+                https://www.google.com
+              </p>
+              <Image
+                src={"/assets/icons/copy-2.svg"}
+                alt="heart"
+                width={18}
+                height={18}
+                className="w-4.5 h-4.5"
+              />
+            </div>
+          </div>
+        </div>
+        {/*  */}
+        <div className="w-full max-w-[415px] flex flex-col gap-6">
+          <div
+            className="w-full max-w-[343px] lg:max-w-[415px] h-[68px] lg:h-[126px] rounded-xl flex items-center justify-center"
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.44)",
+            }}
+          >
+            <div className="flex items-center gap-[10px]">
+              <Image
+                src={"/assets/icons/user.svg"}
+                alt=""
+                width={24}
+                height={24}
+                className="w-6 h-6 rounded-full"
+              />
+              <p className="text-[16px] font-[500] leading-[1.15] text-[#040708]">
+                Robert Fox
+              </p>
+            </div>
+          </div>
+          {/*  */}
+          <div className="w-full max-w-[415px] flex flex-col gap-3">
+            <div className="w-full h-[56px] rounded-xl bg-[#040708] flex items-center justify-center">
+              <div className="flex items-center gap-3">
+                <Image
+                  src="/assets/icons/Logo_Axiom.svg"
+                  alt="logo"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5"
+                />
+                <p className="text-[16px] font-[400] leading-[1.15] text-[#FFFFFF]">
+                  Buy on Axiom
+                </p>
+              </div>
+            </div>
+
+            <div className="w-full h-[56px] rounded-xl bg-[#040708] flex items-center justify-center">
+              <div className="flex items-center gap-3">
+                <Image
+                  src="/assets/icons/Logo_Jupiter.svg"
+                  alt="logo"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5"
+                />
+                <p className="text-[16px] font-[400] leading-[1.15] text-[#FFFFFF]">
+                  Buy on Jupiter
+                </p>
+              </div>
+            </div>
+
+            <div className="w-full h-[56px] rounded-xl bg-[#040708] flex items-center justify-center">
+              <div className="flex items-center gap-3">
+                <Image
+                  src="/assets/icons/Logo_photon.svg"
+                  alt="logo"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5"
+                />
+                <p className="text-[16px] font-[400] leading-[1.15] text-[#FFFFFF]">
+                  Buy on Photon
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
