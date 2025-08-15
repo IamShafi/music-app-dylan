@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import MusicCard from "./MusicCard";
 import MobileMusicCard from "./MobileMusicCard";
+import Link from "next/link";
 
 const MusicLists = () => {
   const [progress, setProgress] = useState(0);
@@ -37,14 +38,17 @@ const MusicLists = () => {
       {/* Desktop Screen Cards */}
       <div className="hidden lg:flex w-full max-w-[1328px] flex-wrap gap-5 justify-center">
         {/* Demo card with functional music bars */}
-        <MusicCard
-          isPlaying={isPlaying}
-          progress={progress}
-          totalDuration={totalDuration}
-          currentTime={progress}
-          onPlayPause={handlePlayPause}
-        />
-
+        {/* Redirect to MusicId page - Add Route link here */}
+        <Link href={"/music/123"}>
+          <MusicCard
+            isPlaying={isPlaying}
+            progress={progress}
+            totalDuration={totalDuration}
+            currentTime={progress}
+            onPlayPause={handlePlayPause}
+          />
+        </Link>
+        
         {/* Static cards with different progress values for demonstration */}
         {Array.from({ length: 7 }).map((_, index) => (
           <MusicCard
