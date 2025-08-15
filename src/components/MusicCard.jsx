@@ -1,7 +1,21 @@
 import Image from "next/image";
 import React from "react";
+import MusicBars from "./MusicBars";
 
-const MusicCard = ({ isPlaying = true }) => {
+// Helper function to format seconds to MM:SS
+const formatTime = (seconds) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+};
+
+const MusicCard = ({ 
+  isPlaying = true, 
+  progress = 0, 
+  totalDuration = 199, // 3:19 in seconds
+  currentTime = 0,
+  onPlayPause = () => {}
+}) => {
   return (
     <div
       className={`w-full max-w-[343px] lg:max-w-[654px] min-h-[197px] lg:min-h-[240px] rounded-xl p-2 
@@ -36,31 +50,16 @@ const MusicCard = ({ isPlaying = true }) => {
           {/* music body */}
           <div className="w-full max-w-[384px] h-[38px] flex items-center gap-[10px] mb-3">
             <p className="mt-5 text-[14px] font-archivo font-[500] leading-[1.15] text-[#0A1113]">
-              {"00:19"}
+              {formatTime(currentTime)}
             </p>
             {/* music bars */}
-            <div className="w-full max-w-[290px] flex gap-[2px] mt-[3px]">
-              {Array.from({ length: 50 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="w-[2px] bg-[#E44615]"
-                  style={{
-                    height: "33px",
-                  }}
-                />
-              ))}
-              {Array.from({ length: 30 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="w-[2px] bg-[#E7E7E7]"
-                  style={{
-                    height: "33px",
-                  }}
-                />
-              ))}
-            </div>
+            <MusicBars 
+              progress={progress} 
+              totalDuration={totalDuration} 
+              isPlaying={isPlaying} 
+            />
             <p className="mt-5 text-[14px] font-archivo font-[500] leading-[1.15] text-[#0A1113]">
-              {"3:19"}
+              {formatTime(totalDuration)}
             </p>
           </div>
           {/* music play/pause */}
@@ -77,7 +76,10 @@ const MusicCard = ({ isPlaying = true }) => {
             {/* play buttons */}
             <div className="w-full max-w-[104px] flex items-center gap-2">
               {/* play / pause button */}
-              <button className="cursor-pointer w-12 h-12 rounded-xl p-[14px] bg-[#11252A]  flex items-center justify-center">
+              <button 
+                onClick={onPlayPause}
+                className="cursor-pointer w-12 h-12 rounded-xl p-[14px] bg-[#11252A]  flex items-center justify-center"
+              >
                 <Image
                   src={
                     isPlaying
