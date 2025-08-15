@@ -18,7 +18,7 @@ const MusicBars = ({ progress = 0, totalDuration = 100, isPlaying = false }) => 
   };
 
   return (
-    <div className="w-full max-w-[290px] flex gap-[2px] mt-[3px] items-end">
+    <div className="w-full max-w-[250px] lg:max-w-[290px] flex gap-[2px] mt-[3px] items-end">
       {Array.from({ length: totalBars }).map((_, index) => {
         const isActive = index < activeBars;
         const barHeight = generateBarHeight(index);

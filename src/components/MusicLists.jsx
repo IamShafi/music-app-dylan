@@ -1,6 +1,7 @@
-'use client'
+"use client";
 import React, { useState, useEffect } from "react";
 import MusicCard from "./MusicCard";
+import MobileMusicCard from "./MobileMusicCard";
 
 const MusicLists = () => {
   const [progress, setProgress] = useState(0);
@@ -12,7 +13,7 @@ const MusicLists = () => {
     let interval;
     if (isPlaying && progress < totalDuration) {
       interval = setInterval(() => {
-        setProgress(prev => {
+        setProgress((prev) => {
           if (prev >= totalDuration) {
             setIsPlaying(false);
             return totalDuration;
@@ -36,18 +37,18 @@ const MusicLists = () => {
       {/* Desktop Screen Cards */}
       <div className="hidden lg:flex w-full max-w-[1328px] flex-wrap gap-5 justify-center">
         {/* Demo card with functional music bars */}
-        <MusicCard 
+        <MusicCard
           isPlaying={isPlaying}
           progress={progress}
           totalDuration={totalDuration}
           currentTime={progress}
           onPlayPause={handlePlayPause}
         />
-        
+
         {/* Static cards with different progress values for demonstration */}
         {Array.from({ length: 7 }).map((_, index) => (
-          <MusicCard 
-            key={index + 1} 
+          <MusicCard
+            key={index + 1}
             isPlaying={false}
             progress={Math.floor((index + 1) * 25)} // Different progress values
             totalDuration={totalDuration}
@@ -56,6 +57,27 @@ const MusicLists = () => {
         ))}
       </div>
       {/* Mobile Screen Cards */}
+      <div className="flex lg:hidden w-full max-w-[1328px] flex-col gap-5 items-center">
+        {/* Demo card with functional music bars */}
+        <MobileMusicCard
+          isPlaying={isPlaying}
+          progress={progress}
+          totalDuration={totalDuration}
+          currentTime={progress}
+          onPlayPause={handlePlayPause}
+        />
+
+        {/* Static cards with different progress values for demonstration */}
+        {Array.from({ length: 7 }).map((_, index) => (
+          <MobileMusicCard
+            key={index + 1}
+            isPlaying={false}
+            progress={Math.floor((index + 1) * 25)} // Different progress values
+            totalDuration={totalDuration}
+            currentTime={Math.floor((index + 1) * 25)}
+          />
+        ))}
+      </div>
     </>
   );
 };
