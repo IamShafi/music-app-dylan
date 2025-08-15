@@ -1,6 +1,6 @@
 import React from "react";
 
-const LaunchCoinPopup = () => {
+const LaunchCoinPopup = ({ onClose }) => {
   return (
     <div className="w-full max-w-[343px] lg:max-w-[600px] h-[762px] lg:h-[656px] overloflow-y-scroll bg-white rounded-xl py-2.5 px-4 lg:px-[24px] lg:py-[14px] relative">
       {/* header */}
@@ -8,7 +8,10 @@ const LaunchCoinPopup = () => {
         <p className="text-[16px] font-archivo font-[400] leading-[1.15] text-[#020304]">
           Launch a coin
         </p>
-        <button className="w-8 h-8 flex items-center justify-center cursor-pointer">
+        <button 
+          onClick={onClose}
+          className="w-8 h-8 flex items-center justify-center cursor-pointer"
+        >
           <img src="/assets/icons/close.svg" alt="close" className="w-5 h-5" />
         </button>
       </div>
