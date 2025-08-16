@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import WaveSurfer from "wavesurfer.js";
 
 const MusicBars = ({
   progress = 0,
@@ -50,6 +51,13 @@ const MusicPage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const totalDuration = 199; // 3:19 in seconds
+
+  const wavesurfer = WaveSurfer.create({
+    container: document.body,
+    waveColor: "rgb(255, 195, 176)",
+    progressColor: "rgb(233, 107, 68)",
+    url: "/musics/Delicate Weapon.mp3",
+  });
 
   // Simulate music progress when playing
   useEffect(() => {
@@ -126,7 +134,7 @@ const MusicPage = () => {
             {/* music bar */}
             <div className="w-full flex gap-1.5 items-end h-[134px] lg:h-[174px]">
               {/* progress bar */}
-              {Array.from({ length: 60 }).map((_, index) => (
+              {/* {Array.from({ length: 60 }).map((_, index) => (
                 <div
                   key={index}
                   className="w-full h-[166px] bg-[#E96B44] rounded-t-[34px]"
@@ -137,7 +145,11 @@ const MusicPage = () => {
                   key={index}
                   className="w-full h-[166px] bg-[#FFC3B0] rounded-t-[34px]"
                 />
-              ))}
+              ))} */}
+              {/* implement wavesurfer.js */}
+              {/* wavesurfer.on('click', () => {
+  wavesurfer.play()
+}) */}
             </div>
             {/* duration */}
             <div className="w-full flex items-center justify-between">
