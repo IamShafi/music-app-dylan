@@ -17,74 +17,100 @@ const MobileMusicCard = ({
   time = "1 hour ago",
   marketCap = "12K",
   musicUrl = "/musics/Delicate Weapon.mp3",
-  isPlaying = false,
-  progress = 0,
-  totalDuration = 199, // 3:19 in seconds
-  currentTime = 0,
   onPlayPause = () => {},
   cardId = null,
   currentlyPlayingId = null,
   isFavorite = false,
 }) => {
   const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
   const wavesurferRef = useRef(null);
   const waveformRef = useRef(null);
+  const audioRef = useRef(null);
 
   // Check if this specific card is currently playing
-  const isThisCardPlaying = cardId === currentlyPlayingId && isPlaying;
+  const isThisCardPlaying = cardId === currentlyPlayingId;
 
   // Initialize wavesurfer
   useEffect(() => {
     if (waveformRef.current && !wavesurferRef.current) {
-      const wavesurfer = WaveSurfer.create({
-        container: waveformRef.current,
-        waveColor: "rgb(255, 195, 176)",
-        progressColor: "rgb(233, 107, 68)",
-        cursorColor: "rgb(233, 107, 68)",
-        barWidth: 2,
-        barGap: 3,
-        barRadius: 2,
-        height: 49,
-        url: musicUrl,
-        responsive: true,
-        normalize: true,
-        interact: false,
-        hideScrollbar: true,
-        fillParent: true,
-        barMinHeight: 2,
-        barMaxHeight: 49,
-        cursorWidth: 0,
-        autoCenter: false,
-        autoScroll: false,
+      // Test if audio file can be loaded
+      const testAudio = new Audio(musicUrl);
+      testAudio.addEventListener('canplaythrough', () => {
+        console.log("Audio file can be loaded:", musicName);
+        testAudio.remove();
+        
+        // Initialize WaveSurfer after confirming audio can be loaded
+        const wavesurfer = WaveSurfer.create({
+          container: waveformRef.current,
+          waveColor: "rgb(255, 195, 176)",
+          progressColor: "rgb(233, 107, 68)",
+          cursorColor: "rgb(233, 107, 68)",
+          barWidth: 2,
+          barGap: 3,
+          barRadius: 2,
+          height: 49,
+          url: musicUrl,
+          responsive: true,
+          normalize: true,
+          interact: false,
+          hideScrollbar: true,
+          fillParent: true,
+          barMinHeight: 2,
+          barMaxHeight: 49,
+          cursorWidth: 0,
+          autoCenter: false,
+          autoScroll: false,
+        });
+
+        wavesurferRef.current = wavesurfer;
+
+        // Set up event listeners
+        wavesurfer.on("ready", () => {
+          console.log("WaveSurfer ready for:", musicName);
+          setDuration(wavesurfer.getDuration());
+          setIsLoading(false);
+          setError(null);
+        });
+
+        wavesurfer.on("timeupdate", () => {
+          // Update current time when playing
+          if (isThisCardPlaying && isPlaying) {
+            const time = wavesurfer.getCurrentTime();
+            setCurrentTime(time);
+          }
+        });
+
+        wavesurfer.on("finish", () => {
+          console.log("Audio finished for:", musicName);
+          setIsPlaying(false);
+          setCurrentTime(0);
+          onPlayPause(); // Stop playing this card
+        });
+
+        wavesurfer.on("error", (error) => {
+          console.error("WaveSurfer error for", musicName, ":", error);
+          console.log("Switching to fallback audio for:", musicName);
+          setUseFallback(true);
+          setError(null);
+          setIsLoading(false);
+        });
+
+        wavesurfer.on("loading", (percent) => {
+          console.log("Loading audio for", musicName, ":", percent + "%");
+        });
       });
 
-      wavesurferRef.current = wavesurfer;
-
-      // Set up event listeners
-      wavesurfer.on("ready", () => {
-        setDuration(wavesurfer.getDuration());
-        setIsLoading(false);
+      testAudio.addEventListener('error', (error) => {
+        console.error("Audio file cannot be loaded:", musicName, error);
+        setUseFallback(true);
         setError(null);
-      });
-
-      wavesurfer.on("audioprocess", () => {
-        // Update progress when playing
-        if (isThisCardPlaying) {
-          const currentTime = wavesurfer.getCurrentTime();
-          // You can add a callback here to update parent state if needed
-        }
-      });
-
-      wavesurfer.on("finish", () => {
-        // Handle when audio finishes
-      });
-
-      wavesurfer.on("error", (error) => {
-        console.error("WaveSurfer error:", error);
-        setError("Failed to load audio file");
         setIsLoading(false);
+        testAudio.remove();
       });
 
       // Cleanup function
@@ -93,20 +119,49 @@ const MobileMusicCard = ({
           wavesurferRef.current.destroy();
           wavesurferRef.current = null;
         }
+        testAudio.remove();
       };
     }
-  }, [musicUrl, isThisCardPlaying]);
+  }, [musicUrl]); // Only depend on musicUrl
 
-  // Update wavesurfer when playing state changes
+  // Update playing state when currentlyPlayingId changes
   useEffect(() => {
-    if (wavesurferRef.current) {
-      if (isThisCardPlaying) {
-        wavesurferRef.current.play();
-      } else {
-        wavesurferRef.current.pause();
-      }
-    }
+    setIsPlaying(isThisCardPlaying);
   }, [isThisCardPlaying]);
+
+  // Handle fallback audio time updates
+  useEffect(() => {
+    if (useFallback && audioRef.current) {
+      const handleTimeUpdate = () => {
+        if (isThisCardPlaying && isPlaying) {
+          setCurrentTime(audioRef.current.currentTime);
+        }
+      };
+      
+      const handleLoadedMetadata = () => {
+        setDuration(audioRef.current.duration);
+        setIsLoading(false);
+      };
+
+      const handleEnded = () => {
+        setIsPlaying(false);
+        setCurrentTime(0);
+        onPlayPause();
+      };
+
+      audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+      audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+      audioRef.current.addEventListener('ended', handleEnded);
+
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+          audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+          audioRef.current.removeEventListener('ended', handleEnded);
+        }
+      };
+    }
+  }, [useFallback, isThisCardPlaying, isPlaying, onPlayPause]);
 
   const handlePlayPause = () => {
     onPlayPause();
@@ -243,9 +298,18 @@ const MobileMusicCard = ({
           />
         </div>
         <p className="mt-[26px] text-[14px] font-archivo font-[500] leading-[1.15] text-[#0A1113]">
-          {formatTime(totalDuration)}
+          {formatTime(duration)}
         </p>
       </div>
+      {/* Fallback audio element */}
+      {useFallback && (
+        <audio
+          ref={audioRef}
+          src={musicUrl}
+          preload="metadata"
+          style={{ display: 'none' }}
+        />
+      )}
     </div>
   );
 };

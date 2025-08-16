@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import MusicCard from "./MusicCard";
 import MobileMusicCard from "./MobileMusicCard";
 
@@ -79,45 +79,14 @@ const musicList = [
 ];
 
 const MusicLists = () => {
-  const [progress, setProgress] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [currentlyPlayingId, setCurrentlyPlayingId] = useState(null);
-  const totalDuration = 199; // 3:19 in seconds
-
-  // Simulate music progress when playing
-  useEffect(() => {
-    let interval;
-    if (isPlaying && progress < totalDuration) {
-      interval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= totalDuration) {
-            setIsPlaying(false);
-            setCurrentlyPlayingId(null);
-            return totalDuration;
-          }
-          return prev + 1;
-        });
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, progress, totalDuration]);
 
   const handlePlayPause = (cardId) => {
     if (currentlyPlayingId === cardId) {
-      // Same card clicked - toggle play/pause
-      if (isPlaying) {
-        setIsPlaying(false);
-        setCurrentlyPlayingId(null);
-      } else {
-        setIsPlaying(true);
-        setCurrentlyPlayingId(cardId);
-      }
+      // Same card clicked - stop playing
+      setCurrentlyPlayingId(null);
     } else {
       // Different card clicked - start playing new card
-      if (progress >= totalDuration) {
-        setProgress(0);
-      }
-      setIsPlaying(true);
       setCurrentlyPlayingId(cardId);
     }
   };
@@ -126,16 +95,11 @@ const MusicLists = () => {
     <>
       {/* Desktop Screen Cards */}
       <div className="hidden lg:flex w-full max-w-[1328px] flex-wrap gap-5 justify-center mb-10">
-        {/* Demo card with functional music bars */}
         {musicList.map((music) => (
           <MusicCard
             key={music.id}
             cardId={music.id}
             currentlyPlayingId={currentlyPlayingId}
-            isPlaying={isPlaying}
-            progress={progress}
-            totalDuration={totalDuration}
-            currentTime={progress}
             onPlayPause={() => handlePlayPause(music.id)}
             {...music}
           />
@@ -143,16 +107,11 @@ const MusicLists = () => {
       </div>
       {/* Mobile Screen Cards */}
       <div className="flex lg:hidden w-full max-w-[1328px] flex-col gap-5 items-center mb-10">
-        {/* Demo card with functional music bars */}
         {musicList.map((music) => (
           <MobileMusicCard
             key={music.id}
             cardId={music.id}
             currentlyPlayingId={currentlyPlayingId}
-            isPlaying={isPlaying}
-            progress={progress}
-            totalDuration={totalDuration}
-            currentTime={progress}
             onPlayPause={() => handlePlayPause(music.id)}
             {...music}
           />
