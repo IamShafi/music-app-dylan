@@ -14,6 +14,14 @@ const formatTime = (seconds) => {
 };
 
 const MusicCard = ({
+  musicName = "Don't Stop Believin'",
+  user = "Kathryn Murphy",
+  time = "1 hour ago",
+  marketCap = "12K",
+  musicLink = "/music/123",
+  userLogo = "/assets/images/user-1.svg",
+  image = "/assets/images/card-1.svg",
+  musicUrl = "/musics/Delicate Weapon.mp3",
   isPlaying = true,
   isFavorite = true,
   progress = 0,
@@ -30,8 +38,9 @@ const MusicCard = ({
     >
       <div className="w-full flex items-center gap-2">
         {/* redirect to music page */}
+        {/* music image */}
         <Image
-          src="/assets/images/card-1.svg"
+          src={image}
           alt="card"
           width={224}
           height={224}
@@ -46,13 +55,19 @@ const MusicCard = ({
           {/* header */}
           <div className="w-full flex items-center justify-between mb-3">
             <Link href={"/music/123"}>
+              {/* music name */}
               <h2 className="w-full min-w-[180px] text-[20px] font-archivo font-semibold leading-[1.15] text-[#0A1113]">
-                Don't Stop Believin'
+                {musicName}
               </h2>
             </Link>
+            {/* favorite button */}
             <div className="cursor-pointer w-8 h-8 flex items-center justify-center">
               <Image
-                src={isFavorite ? "/assets/icons/heart-red.svg" : "/assets/icons/heart.svg"}
+                src={
+                  isFavorite
+                    ? "/assets/icons/heart-red.svg"
+                    : "/assets/icons/heart.svg"
+                }
                 alt="heart"
                 width={24}
                 height={24}
@@ -83,10 +98,10 @@ const MusicCard = ({
                 Market cap
               </p>
               <h2 className="text-[16px] font-archivo font-[600] leading-[1.15] text-[#0A1113]">
-                {"12K"}
+                {marketCap}
               </h2>
             </div>
-            {/* play buttons */}
+            {/* buttons */}
             <div className="w-full max-w-[104px] flex items-center gap-2">
               {/* play / pause button */}
               <button
@@ -113,30 +128,33 @@ const MusicCard = ({
                   width={20}
                   height={20}
                   className="w-5 h-5"
+                  onClick={() => {
+                    navigator.clipboard.writeText(musicLink);
+                  }}
                 />
               </button>
             </div>
           </div>
-          {/* user */}
+          {/* user and time */}
           <Link href={"/music/123"}>
             <div className="w-full h-[32px] flex items-center justify-between">
               {/* user */}
               <div className="min-w-[139px] flex items-center gap-2">
                 <Image
-                  src={"/assets/images/user-1.svg"}
+                  src={userLogo}
                   alt="user"
                   width={32}
                   height={32}
                   className="w-8 h-8 rounded-full"
                 />
                 <p className="text-[14px] font-archivo font-[400] leading-[1.15] text-[#0A1113]">
-                  Kathryn Murphy
+                  {user}
                 </p>
               </div>
               {/* hour ago */}
               <div className="min-w-[80px] h-[29px] rounded-xl bg-[#E7E7E7] p-2 flex items-center justify-center">
                 <p className="text-[12px] font-archivo font-[400] leading-[1.15] text-[#3B4142]">
-                  {"1 hour ago"}
+                  {time}
                 </p>
               </div>
             </div>

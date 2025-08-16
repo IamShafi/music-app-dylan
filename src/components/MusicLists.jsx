@@ -2,7 +2,81 @@
 import React, { useState, useEffect } from "react";
 import MusicCard from "./MusicCard";
 import MobileMusicCard from "./MobileMusicCard";
-import Link from "next/link";
+
+const musicList = [
+  {
+    id: 1,
+    musicName: "Delicate Weapon",
+    isFavorite: true,
+    musicUrl: "/musics/Delicate Weapon.mp3",
+    marketCap: "12K",
+    musicLink: "/music/123",
+    user: "Grimes",
+    userLogo: "/assets/images/user-1.svg",
+    time: "1 hour ago",
+    image: "/assets/images/card-1.svg",
+  },
+  {
+    id: 2,
+    musicName: "Don't Stop Believin'",
+    isFavorite: false,
+    musicUrl: "/musics/Delicate Weapon.mp3",
+    marketCap: "12K",
+    musicLink: "/music/123",
+    user: "Kathryn Murphy",
+    userLogo: "/assets/images/user-1.svg",
+    time: "2 hour ago",
+    image: "/assets/images/card-1.svg",
+  },
+  {
+    id: 3,
+    musicName: "Don't Stop Believin'",
+    isFavorite: false,
+    musicUrl: "/musics/Delicate Weapon.mp3",
+    marketCap: "12K",
+    musicLink: "/music/123",
+    user: "Kathryn Murphy",
+    userLogo: "/assets/images/user-1.svg",
+    time: "3 hour ago",
+    image: "/assets/images/card-1.svg",
+  },
+  {
+    id: 4,
+    musicName: "Don't Stop Believin'",
+    isFavorite: true,
+    musicUrl: "/musics/Delicate Weapon.mp3",
+    marketCap: "12K",
+    musicLink: "/music/123",
+    user: "Kathryn Murphy",
+    userLogo: "/assets/images/user-1.svg",
+    time: "1 hour ago",
+    image: "/assets/images/card-1.svg",
+  },
+  {
+    id: 5,
+    musicName: "Don't Stop Believin'",
+    isFavorite: true,
+    musicUrl: "/musics/Delicate Weapon.mp3",
+    marketCap: "12K",
+    musicLink: "/music/123",
+    user: "Kathryn Murphy",
+    userLogo: "/assets/images/user-1.svg",
+    time: "1 hour ago",
+    image: "/assets/images/card-1.svg",
+  },
+  {
+    id: 6,
+    musicName: "Don't Stop Believin'",
+    isFavorite: true,
+    musicUrl: "/musics/Delicate Weapon.mp3",
+    marketCap: "12K",
+    musicLink: "/music/123",
+    user: "Kathryn Murphy",
+    userLogo: "/assets/images/user-1.svg",
+    time: "1 hour ago",
+    image: "/assets/images/card-1.svg",
+  },
+];
 
 const MusicLists = () => {
   const [progress, setProgress] = useState(0);
@@ -38,46 +112,30 @@ const MusicLists = () => {
       {/* Desktop Screen Cards */}
       <div className="hidden lg:flex w-full max-w-[1328px] flex-wrap gap-5 justify-center">
         {/* Demo card with functional music bars */}
-        {/* Redirect to MusicId page - Add Route link here */}
-
-        <MusicCard
-          isPlaying={isPlaying}
-          progress={progress}
-          totalDuration={totalDuration}
-          currentTime={progress}
-          onPlayPause={handlePlayPause}
-        />
-
-        {/* Static cards with different progress values for demonstration */}
-        {Array.from({ length: 7 }).map((_, index) => (
+        {musicList.map((music) => (
           <MusicCard
-            key={index + 1}
-            isPlaying={false}
-            progress={Math.floor((index + 1) * 25)} // Different progress values
+            key={music.id}
+            isPlaying={isPlaying}
+            progress={progress}
             totalDuration={totalDuration}
-            currentTime={Math.floor((index + 1) * 25)}
+            currentTime={progress}
+            onPlayPause={handlePlayPause}
+            {...music}
           />
         ))}
       </div>
       {/* Mobile Screen Cards */}
       <div className="flex lg:hidden w-full max-w-[1328px] flex-col gap-5 items-center">
         {/* Demo card with functional music bars */}
-        <MobileMusicCard
-          isPlaying={isPlaying}
-          progress={progress}
-          totalDuration={totalDuration}
-          currentTime={progress}
-          onPlayPause={handlePlayPause}
-        />
-
-        {/* Static cards with different progress values for demonstration */}
-        {Array.from({ length: 7 }).map((_, index) => (
+        {musicList.map((music) => (
           <MobileMusicCard
-            key={index + 1}
-            isPlaying={false}
-            progress={Math.floor((index + 1) * 25)} // Different progress values
+            key={music.id}
+            isPlaying={isPlaying}
+            progress={progress}
             totalDuration={totalDuration}
-            currentTime={Math.floor((index + 1) * 25)}
+            currentTime={progress}
+            onPlayPause={handlePlayPause}
+            {...music}
           />
         ))}
       </div>
