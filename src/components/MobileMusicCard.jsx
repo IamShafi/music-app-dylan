@@ -79,10 +79,8 @@ const MobileMusicCard = ({
 
         wavesurfer.on("timeupdate", () => {
           // Update current time when playing
-          if (isThisCardPlaying && isPlaying) {
-            const time = wavesurfer.getCurrentTime();
-            setCurrentTime(time);
-          }
+          const time = wavesurfer.getCurrentTime();
+          setCurrentTime(time);
         });
 
         wavesurfer.on("finish", () => {
