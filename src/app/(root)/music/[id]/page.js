@@ -124,12 +124,20 @@ const MusicPage = () => {
           {/* music box */}
           <div className="w-full h-[155px] lg:h-[206px] flex-1 gap-8 lg:gap-[14px]">
             {/* music bar */}
-            <div className="w-full h-[134px] lg:h-[174px]">
-              <MusicBars
-                progress={progress}
-                totalDuration={totalDuration}
-                isPlaying={isPlaying}
-              />
+            <div className="w-full flex gap-1.5 items-end h-[134px] lg:h-[174px]">
+              {/* progress bar */}
+              {Array.from({ length: 60 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="w-full h-[166px] bg-[#E96B44] rounded-t-[34px]"
+                />
+              ))}
+              {Array.from({ length: 10 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="w-full h-[166px] bg-[#FFC3B0] rounded-t-[34px]"
+                />
+              ))}
             </div>
             {/* duration */}
             <div className="w-full flex items-center justify-between">
