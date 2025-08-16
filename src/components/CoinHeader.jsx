@@ -66,7 +66,7 @@ const CoinHeader = () => {
           ></div>
           
           {/* Modal */}
-          <div className="relative z-10">
+          <div className="relative z-100">
             <LaunchCoinPopup onClose={closePopup} />
           </div>
         </div>
