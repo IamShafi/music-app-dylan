@@ -39,16 +39,15 @@ const MusicLists = () => {
       <div className="hidden lg:flex w-full max-w-[1328px] flex-wrap gap-5 justify-center">
         {/* Demo card with functional music bars */}
         {/* Redirect to MusicId page - Add Route link here */}
-        <Link href={"/music/123"}>
-          <MusicCard
-            isPlaying={isPlaying}
-            progress={progress}
-            totalDuration={totalDuration}
-            currentTime={progress}
-            onPlayPause={handlePlayPause}
-          />
-        </Link>
-        
+
+        <MusicCard
+          isPlaying={isPlaying}
+          progress={progress}
+          totalDuration={totalDuration}
+          currentTime={progress}
+          onPlayPause={handlePlayPause}
+        />
+
         {/* Static cards with different progress values for demonstration */}
         {Array.from({ length: 7 }).map((_, index) => (
           <MusicCard
