@@ -129,6 +129,32 @@ const MobileMusicCard = ({
     setIsPlaying(isThisCardPlaying);
   }, [isThisCardPlaying]);
 
+  // Update wavesurfer when playing state changes
+  useEffect(() => {
+    if (useFallback && audioRef.current) {
+      if (isThisCardPlaying && isPlaying) {
+        audioRef.current.play().catch(err => {
+          console.error("Fallback audio play error:", err);
+          setError("Failed to play audio");
+        });
+      } else {
+        audioRef.current.pause();
+        if (!isThisCardPlaying) {
+          setCurrentTime(0);
+        }
+      }
+    } else if (wavesurferRef.current) {
+      if (isThisCardPlaying && isPlaying) {
+        wavesurferRef.current.play();
+      } else {
+        wavesurferRef.current.pause();
+        if (!isThisCardPlaying) {
+          setCurrentTime(0);
+        }
+      }
+    }
+  }, [isThisCardPlaying, isPlaying, useFallback]);
+
   // Handle fallback audio time updates
   useEffect(() => {
     if (useFallback && audioRef.current) {
