@@ -15,6 +15,7 @@ const formatTime = (seconds) => {
 
 const MusicCard = ({
   isPlaying = true,
+  isFavorite = true,
   progress = 0,
   totalDuration = 199, // 3:19 in seconds
   currentTime = 0,
@@ -51,7 +52,7 @@ const MusicCard = ({
             </Link>
             <div className="cursor-pointer w-8 h-8 flex items-center justify-center">
               <Image
-                src={"/assets/icons/heart.svg"}
+                src={isFavorite ? "/assets/icons/heart-red.svg" : "/assets/icons/heart.svg"}
                 alt="heart"
                 width={24}
                 height={24}
