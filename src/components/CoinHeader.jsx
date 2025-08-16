@@ -58,7 +58,7 @@ const CoinHeader = () => {
 
       {/* Popup Modal with Backdrop */}
       {isPopupOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
           {/* Backdrop */}
           <div 
             className="absolute inset-0 bg-[#060A0B47] backdrop-blur-[24px]"
@@ -66,7 +66,7 @@ const CoinHeader = () => {
           ></div>
           
           {/* Modal */}
-          <div className="relative z-100">
+          <div className="relative z-[70]">
             <LaunchCoinPopup onClose={closePopup} />
           </div>
         </div>
