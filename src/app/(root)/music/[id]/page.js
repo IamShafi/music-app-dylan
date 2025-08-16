@@ -236,7 +236,7 @@ const MusicPage = () => {
                 alt="heart"
                 width={18}
                 height={18}
-                className="w-4.5 h-4.5"
+                className="w-4.5 h-4.5 cursor-pointer "
               />
             </div>
           </div>
@@ -264,7 +264,7 @@ const MusicPage = () => {
                 alt="heart"
                 width={18}
                 height={18}
-                className="w-4.5 h-4.5"
+                className="w-4.5 h-4.5 cursor-pointer "
               />
             </div>
           </div>
@@ -292,7 +292,7 @@ const MusicPage = () => {
           </div>
           {/*  */}
           <div className="w-full max-w-[415px] flex flex-col gap-3">
-            <div className="w-full h-[56px] rounded-xl bg-[#040708] flex items-center justify-center">
+            <div className="cursor-pointer w-full h-[56px] rounded-xl bg-[#040708] flex items-center justify-center">
               <div className="flex items-center gap-3">
                 <Image
                   src="/assets/icons/Logo_Axiom.svg"
@@ -307,7 +307,7 @@ const MusicPage = () => {
               </div>
             </div>
 
-            <div className="w-full h-[56px] rounded-xl bg-[#040708] flex items-center justify-center">
+            <div className="cursor-pointer w-full h-[56px] rounded-xl bg-[#040708] flex items-center justify-center">
               <div className="flex items-center gap-3">
                 <Image
                   src="/assets/icons/Logo_Jupiter.svg"
@@ -322,7 +322,7 @@ const MusicPage = () => {
               </div>
             </div>
 
-            <div className="w-full h-[56px] rounded-xl bg-[#040708] flex items-center justify-center">
+            <div className="cursor-pointer w-full h-[56px] rounded-xl bg-[#040708] flex items-center justify-center">
               <div className="flex items-center gap-3">
                 <Image
                   src="/assets/icons/Logo_photon.svg"
