@@ -65,6 +65,28 @@ const DesktopFooter = ({ isPlaying = false, isFavorite = false }) => {
         </div>
       </div>
 
+      {/* volume control */}
+      {/* <div className="flex items-center gap-2">
+              <Image
+                src="/assets/icons/volume-2.svg"
+                alt="volume"
+                width={20}
+                height={20}
+                className="w-5 h-5"
+              />
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={volume}
+                onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                className="w-20 h-2 bg-[#CECFD0] rounded-lg appearance-none cursor-pointer slider"
+                style={{
+                  background: `linear-gradient(to right, #0A1113 0%, #0A1113 ${volume * 100}%, #CECFD0 ${volume * 100}%, #CECFD0 100%)`
+                }}
+              />
+            </div> */}
       <div className="w-full max-w-[368px] flex items-center justify-end">
         <div className="w-full max-w-[141] h-10 flex items-center gap-[8px] py-2">
           <Image
@@ -117,6 +139,28 @@ const MobileFooter = ({ isPlaying = false, isFavorite = true }) => {
           </button>
         </div>
         {/* sound */}
+        {/* volume control */}
+        {/* <div className="flex items-center gap-2">
+              <Image
+                src="/assets/icons/volume-2.svg"
+                alt="volume"
+                width={20}
+                height={20}
+                className="w-5 h-5"
+              />
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={volume}
+                onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                className="w-20 h-2 bg-[#CECFD0] rounded-lg appearance-none cursor-pointer slider"
+                style={{
+                  background: `linear-gradient(to right, #0A1113 0%, #0A1113 ${volume * 100}%, #CECFD0 ${volume * 100}%, #CECFD0 100%)`
+                }}
+              />
+            </div> */}
         <div className="w-full max-w-[141] h-10 flex items-center gap-[8px] py-2">
           <div className="cursor-pointer w-10 h-10 flex items-center justify-center">
             <Image

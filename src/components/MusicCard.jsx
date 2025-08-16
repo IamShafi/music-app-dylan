@@ -164,34 +164,41 @@ const MusicCard = ({
             </div>
           </div>
           {/* music body */}
-          <div className="w-full max-w-[384px] h-[38px] flex items-center gap-[10px] mb-3">
-            <p className="mt-5 text-[14px] font-archivo font-[500] leading-[1.15] text-[#0A1113]">
-              {formatTime(currentTime)}
-            </p>
-            {/* music bars - replaced with WaveSurfer */}
-            <div className="flex-1 h-[38px] flex items-center">
-              {isLoading && !error && (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="text-[#E96B44] text-xs">Loading...</div>
-                </div>
-              )}
-              {error && (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="text-red-500 text-xs">Error</div>
-                </div>
-              )}
-              <div
-                ref={waveformRef}
-                className="w-full h-full"
-                style={{
-                  display: isLoading || error ? "none" : "block",
-                }}
-              />
+          <div className="w-full h-[38px] mb-3">
+            <div
+              className={`${
+                isThisCardPlaying ? "flex" : "hidden"
+              } w-full max-w-[384px] h-[38px] items-center gap-[10px]`}
+            >
+              <p className="mt-5 text-[14px] font-archivo font-[500] leading-[1.15] text-[#0A1113]">
+                {formatTime(currentTime)}
+              </p>
+              {/* music bars - replaced with WaveSurfer */}
+              <div className="flex-1 h-[38px] flex items-center">
+                {isLoading && !error && (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="text-[#E96B44] text-xs">Loading...</div>
+                  </div>
+                )}
+                {error && (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="text-red-500 text-xs">Error</div>
+                  </div>
+                )}
+                <div
+                  ref={waveformRef}
+                  className="w-full h-full"
+                  style={{
+                    display: isLoading || error ? "none" : "block",
+                  }}
+                />
+              </div>
+              <p className="mt-5 text-[14px] font-archivo font-[500] leading-[1.15] text-[#0A1113]">
+                {formatTime(totalDuration)}
+              </p>
             </div>
-            <p className="mt-5 text-[14px] font-archivo font-[500] leading-[1.15] text-[#0A1113]">
-              {formatTime(totalDuration)}
-            </p>
           </div>
+
           {/* music play/pause */}
           <div className="w-full h-[48px] flex items-center justify-between mb-3">
             {/* market cap */}

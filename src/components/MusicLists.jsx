@@ -125,7 +125,7 @@ const MusicLists = () => {
   return (
     <>
       {/* Desktop Screen Cards */}
-      <div className="hidden lg:flex w-full max-w-[1328px] flex-wrap gap-5 justify-center">
+      <div className="hidden lg:flex w-full max-w-[1328px] flex-wrap gap-5 justify-center mb-10">
         {/* Demo card with functional music bars */}
         {musicList.map((music) => (
           <MusicCard
@@ -142,7 +142,7 @@ const MusicLists = () => {
         ))}
       </div>
       {/* Mobile Screen Cards */}
-      <div className="flex lg:hidden w-full max-w-[1328px] flex-col gap-5 items-center">
+      <div className="flex lg:hidden w-full max-w-[1328px] flex-col gap-5 items-center mb-10">
         {/* Demo card with functional music bars */}
         {musicList.map((music) => (
           <MobileMusicCard

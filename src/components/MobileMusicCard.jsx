@@ -114,7 +114,7 @@ const MobileMusicCard = ({
 
   return (
     <div
-      className={`w-full max-w-[350px] flex flex-col gap-[10px] min-h-[197px] rounded-xl p-2 
+      className={`w-full max-w-[350px] flex flex-col gap-[10px] min-h-[138px] rounded-xl p-2 
         shadow-[0px_-2px_22.5px_0px_rgba(0,0,0,0.12)] bg-white 
     ${isThisCardPlaying ? "border-[1.5px] border-[#E44615]" : "border-none"}`}
     >
@@ -212,9 +212,13 @@ const MobileMusicCard = ({
         </div>
       </div>
       {/* divider */}
-      <div className="w-full h-[1px] bg-[#E7E7E7]" />
+      <div className={`${isThisCardPlaying ? "block" : "hidden"} w-full h-[1px] bg-[#E7E7E7]`} />
       {/* music body */}
-      <div className="w-full max-w-[327px] h-[49px] flex items-center gap-[10px]">
+      <div
+        className={`${
+          isThisCardPlaying ? "flex" : "hidden"
+        } w-full max-w-[327px] h-[49px] flex items-center gap-[10px]`}
+      >
         <p className="mt-[26px] text-[14px] font-archivo font-[500] leading-[1.15] text-[#0A1113]">
           {formatTime(currentTime)}
         </p>
