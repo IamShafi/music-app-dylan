@@ -11,6 +11,39 @@
   --font-mono: var(--font-geist-mono); */
 }
 
+/* Custom styles for volume slider */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #E96B44;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slider::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #E96B44;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slider::-webkit-slider-track {
+  height: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.slider::-moz-range-track {
+  height: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
 body {
   background: linear-gradient(120.48deg, #DDDFF4 0%, #EEEBF7 37.75%, #FCDDDB 102.49%);

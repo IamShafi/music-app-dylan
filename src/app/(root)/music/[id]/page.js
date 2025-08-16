@@ -1,96 +1,148 @@
 "use client";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import WaveSurfer from "wavesurfer.js";
-
-const MusicBars = ({
-  progress = 0,
-  totalDuration = 100,
-  isPlaying = false,
-}) => {
-  const totalBars = 84;
-
-  // Calculate how many bars should be active based on progress
-  const activeBars = Math.floor((progress / totalDuration) * totalBars);
-
-  // Generate consistent heights for the bars to create a more realistic waveform effect
-  const generateBarHeight = (index) => {
-    // Create a more natural waveform pattern using sine waves
-    const baseHeight = 166;
-    const wave1 = Math.sin(index * 0.2) * 6;
-    const wave2 = Math.sin(index * 0.5) * 3;
-    const wave3 = Math.sin(index * 0.8) * 2;
-    const totalVariation = wave1 + wave2 + wave3;
-    return Math.max(8, Math.min(40, baseHeight + totalVariation));
-  };
-
-  return (
-    <div className="w-full flex gap-[6.7px] items-end  overflow-hidden">
-      {Array.from({ length: totalBars }).map((_, index) => {
-        const isActive = index < activeBars;
-        const barHeight = generateBarHeight(index);
-
-        return (
-          <div
-            key={index}
-            className={`w-[4px] rounded-t-[16px] transition-all duration-300 ease-in-out ${
-              isActive ? "bg-[#E44615]" : "bg-[#FFC3B0]"
-            }`}
-            style={{
-              height: `${barHeight}px`,
-              opacity: isActive ? 1 : 0.6,
-            }}
-          />
-        );
-      })}
-    </div>
-  );
-};
 
 const MusicPage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(true);
   const [progress, setProgress] = useState(0);
-  const totalDuration = 199; // 3:19 in seconds
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [volume, setVolume] = useState(1);
+  const wavesurferRef = useRef(null);
+  const waveformRef = useRef(null);
 
-  const wavesurfer = WaveSurfer.create({
-    container: document.body,
-    waveColor: "rgb(255, 195, 176)",
-    progressColor: "rgb(233, 107, 68)",
-    url: "/musics/Delicate Weapon.mp3",
-  });
-
-  // Simulate music progress when playing
+  // Initialize wavesurfer
   useEffect(() => {
-    let interval;
-    if (isPlaying && progress < totalDuration) {
-      interval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= totalDuration) {
-            setIsPlaying(false);
-            return totalDuration;
-          }
-          return prev + 1;
-        });
-      }, 1000);
+    if (waveformRef.current && !wavesurferRef.current) {
+      const wavesurfer = WaveSurfer.create({
+        container: waveformRef.current,
+        waveColor: "rgb(255, 195, 176)",
+        progressColor: "rgb(233, 107, 68)",
+        cursorColor: "rgb(233, 107, 68)",
+        barWidth: 4,
+        barGap: 6,
+        barRadius: 34,
+        height: 174,
+        url: "/musics/Delicate Weapon.mp3",
+        responsive: true,
+        normalize: true,
+        interact: true,
+        hideScrollbar: true,
+        fillParent: true,
+        barMinHeight: 2,
+        barMaxHeight: 40,
+        cursorWidth: 2,
+        autoCenter: true,
+        autoScroll: true,
+      });
+
+      wavesurferRef.current = wavesurfer;
+
+      // Set up event listeners
+      wavesurfer.on("ready", () => {
+        setDuration(wavesurfer.getDuration());
+        setIsLoading(false);
+        setError(null);
+        // console.log("WaveSurfer is ready");
+      });
+
+      wavesurfer.on("audioprocess", () => {
+        setCurrentTime(wavesurfer.getCurrentTime());
+        setProgress(wavesurfer.getCurrentTime());
+      });
+
+      wavesurfer.on("finish", () => {
+        setIsPlaying(false);
+        setProgress(0);
+        setCurrentTime(0);
+      });
+
+      wavesurfer.on("seek", (progress) => {
+        setProgress(progress * wavesurfer.getDuration());
+        setCurrentTime(progress * wavesurfer.getDuration());
+      });
+
+      wavesurfer.on("error", (error) => {
+        console.error("WaveSurfer error:", error);
+        setError("Failed to load audio file");
+        setIsLoading(false);
+      });
+
+      wavesurfer.on("loading", (percent) => {
+        setIsLoading(true);
+      });
+
+      // Add click-to-seek functionality
+      wavesurfer.on("click", (position) => {
+        const seekTime = position * wavesurfer.getDuration();
+        wavesurfer.seekTo(position);
+        setCurrentTime(seekTime);
+        setProgress(seekTime);
+      });
+
+      // Add hover functionality for time display
+      // wavesurfer.on("interaction", (position) => {
+      //   const hoverTime = position * wavesurfer.getDuration();
+      //   // You can add a tooltip here to show the hover time
+      // });
+
+      // Add play/pause state sync
+      wavesurfer.on("play", () => {
+        setIsPlaying(true);
+      });
+
+      wavesurfer.on("pause", () => {
+        setIsPlaying(false);
+      });
+
+      // Cleanup function
+      return () => {
+        if (wavesurferRef.current) {
+          wavesurferRef.current.destroy();
+          wavesurferRef.current = null;
+        }
+      };
     }
-    return () => clearInterval(interval);
-  }, [isPlaying, progress, totalDuration]);
+  }, []);
 
   const handlePlayPause = () => {
-    if (progress >= totalDuration) {
-      setProgress(0);
+    if (wavesurferRef.current) {
+      if (isPlaying) {
+        wavesurferRef.current.pause();
+      } else {
+        wavesurferRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
     }
-    setIsPlaying(!isPlaying);
+  };
+
+  const handleVolumeChange = (newVolume) => {
+    if (wavesurferRef.current) {
+      wavesurferRef.current.setVolume(newVolume);
+      setVolume(newVolume);
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   return (
-    <div className="w-full flex flex-col mb-[185px]">
+    <div className="w-full flex flex-col mb-10">
       <div className="w-full flex flex-col xl:flex-row items-center gap-[24px] lg:gap-[32px] mb-6 lg:mb-8">
         <div className="w-full max-w-[881px] flex flex-col gap-10 lg:gap-[84px]">
-          <div className="w-full flex items-center gap-3 lg:gap-6">
+          <div className="w-full flex items-center gap-3 lg:gap-6 mb-10 lg:mb-0">
             {/* play / pause button */}
             <button
-              // onClick={onPlayPause}
+              onClick={handlePlayPause}
               className="cursor-pointer w-12 lg:w-[72px] h-12 lg:h-[72px] rounded-xl p-[14px] bg-[#11252A]  flex items-center justify-center"
             >
               <Image
@@ -105,10 +157,32 @@ const MusicPage = () => {
                 className="w-5 lg:w-8 h-5 lg:h-8"
               />
             </button>
+            {/* volume control */}
+            {/* <div className="flex items-center gap-2">
+              <Image
+                src="/assets/icons/volume-2.svg"
+                alt="volume"
+                width={20}
+                height={20}
+                className="w-5 h-5"
+              />
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={volume}
+                onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                className="w-20 h-2 bg-[#CECFD0] rounded-lg appearance-none cursor-pointer slider"
+                style={{
+                  background: `linear-gradient(to right, #0A1113 0%, #0A1113 ${volume * 100}%, #CECFD0 ${volume * 100}%, #CECFD0 100%)`
+                }}
+              />
+            </div> */}
             {/* text */}
             <div className="w-full max-w-[705px] flex flex-col gap-[6px]">
               <div className="flex items-center gap-2 lg:gap-4">
-                <h2 className="min-w-[147px] text-[20px] lg:text-[32px] font-archivo font-semibold leading-[1.10] text-[#111111]">
+                <h2 className="min-w-[92px] lg:min-w-[147px] text-[20px] lg:text-[32px] font-archivo font-semibold leading-[1.10] text-[#111111]">
                   Bass loop
                 </h2>
                 <div className="w-[66px] h-[26px] lg:h-[30px] bg-[#FDF4F1] rounded-[8px] p-1.5 flex items-center justify-center font-[400] text-[14px] text-[#E96B44]">
@@ -123,8 +197,12 @@ const MusicPage = () => {
             {/* favorite */}
             <div className="w-12 h-12 lg:w-[56px] lg:h-[56px] rounded-xl bg-white flex items-center justify-center">
               <img
-                src="/assets/icons/heart-red.svg"
-                alt="heart"
+                src={
+                  isFavorite
+                    ? "/assets/icons/heart-red.svg"
+                    : "/assets/icons/heart.svg"
+                }
+                alt=""
                 className="w-5 lg:w-[24px] h-5 lg:h-[24px]"
               />
             </div>
@@ -133,42 +211,72 @@ const MusicPage = () => {
           <div className="w-full h-[155px] lg:h-[206px] flex-1 gap-8 lg:gap-[14px]">
             {/* music bar */}
             <div className="w-full flex gap-1.5 items-end h-[134px] lg:h-[174px]">
-              {/* progress bar */}
-              {/* {Array.from({ length: 60 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="w-full h-[166px] bg-[#E96B44] rounded-t-[34px]"
-                />
-              ))}
-              {Array.from({ length: 10 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="w-full h-[166px] bg-[#FFC3B0] rounded-t-[34px]"
-                />
-              ))} */}
-              {/* implement wavesurfer.js */}
-              {/* wavesurfer.on('click', () => {
-  wavesurfer.play()
-}) */}
+              {/* wavesurfer.js implementation */}
+              {isLoading && !error && (
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="text-[#E96B44] text-sm">
+                    Loading waveform...
+                  </div>
+                </div>
+              )}
+              {error && (
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="text-red-500 text-sm">{error}</div>
+                </div>
+              )}
+              <div
+                ref={waveformRef}
+                className="w-full h-full"
+                style={{
+                  minHeight: "174px",
+                  display: isLoading || error ? "none" : "block",
+                }}
+              />
             </div>
             {/* duration */}
             <div className="w-full flex items-center justify-between">
               <p className="min-w-[37px] h-[13px] text-[12px] lg:text-[14px] font-archivo font-[400] leading-[1.1] text-[#0A1113]">
-                00:19
+                {formatTime(currentTime)}
               </p>
+              {/* progress bar */}
+              {/* <div
+                className="w-full max-w-[800px] h-2 bg-[#FFC3B0] rounded-full overflow-hidden cursor-pointer relative"
+                onClick={(e) => {
+                  if (wavesurferRef.current && duration > 0) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const clickPercent = clickX / rect.width;
+                    const seekTime = clickPercent * duration;
+                    wavesurferRef.current.seekTo(clickPercent);
+                    setCurrentTime(seekTime);
+                    setProgress(seekTime);
+                  }
+                }}
+              >
+                <div
+                  className="h-full bg-[#E96B44] rounded-full transition-all duration-100 ease-out"
+                  style={{
+                    width: `${
+                      duration > 0 ? (currentTime / duration) * 100 : 0
+                    }%`,
+                  }}
+                />
+              </div> */}
               <p className="min-w-[37px] h-[13px] text-[12px] lg:text-[14px] font-archivo font-[400] leading-[1.1] text-[#0A1113]">
-                02:19
+                {formatTime(duration)}
               </p>
             </div>
           </div>
         </div>
-        <Image
-          src="/assets/images/card-2.svg"
-          alt="card"
-          width={415}
-          height={362}
-          className="w-[343px] h-[219px] lg:w-[415px] lg:h-[362px] rounded-xl"
-        />
+        <div className="w-[343px] h-[219px] lg:w-[415px] lg:h-[362px] rounded-xl">
+          <Image
+            src="/assets/images/card-2.svg"
+            alt="card"
+            width={415}
+            height={362}
+            className="w-[343px] h-[219px] lg:w-[415px] lg:h-[362px] rounded-xl object-cover"
+          />
+        </div>
       </div>
       {/*  */}
       <div className="w-full flex flex-col xl:flex-row items-center gap-[24px] lg:gap-[32px]">
@@ -183,7 +291,7 @@ const MusicPage = () => {
             <div className="min-w-[65px] flex items-center gap-1.5">
               <Image
                 src="/assets/icons/globe.svg"
-                alt="heart"
+                alt=""
                 width={18}
                 height={18}
                 className="w-4.5 h-4.5"
@@ -219,7 +327,7 @@ const MusicPage = () => {
             <div className="min-w-[65px] flex items-center gap-1.5">
               <Image
                 src="/assets/icons/shopping-cart.svg"
-                alt="heart"
+                alt=""
                 width={18}
                 height={18}
                 className="w-4.5 h-4.5"
@@ -238,7 +346,7 @@ const MusicPage = () => {
             <div className="min-w-[65px] flex items-center gap-1.5">
               <Image
                 src="/assets/icons/building-2.svg"
-                alt="heart"
+                alt=""
                 width={18}
                 height={18}
                 className="w-4.5 h-4.5"
@@ -253,7 +361,7 @@ const MusicPage = () => {
               </p>
               <Image
                 src={"/assets/icons/copy-2.svg"}
-                alt="heart"
+                alt=""
                 width={18}
                 height={18}
                 className="w-4.5 h-4.5 cursor-pointer "
@@ -266,7 +374,7 @@ const MusicPage = () => {
             <div className="min-w-[65px] flex items-center gap-1.5">
               <Image
                 src="/assets/icons/link-2.svg"
-                alt="heart"
+                alt=""
                 width={18}
                 height={18}
                 className="w-4.5 h-4.5"
