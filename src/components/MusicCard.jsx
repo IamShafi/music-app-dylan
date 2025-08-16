@@ -1,8 +1,8 @@
 import Image from "next/image";
-import React from "react";
-import MusicBars from "./MusicBars";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import WaveSurfer from "wavesurfer.js";
 
 // Helper function to format seconds to MM:SS
 const formatTime = (seconds) => {
@@ -22,19 +22,107 @@ const MusicCard = ({
   userLogo = "/assets/images/user-1.svg",
   image = "/assets/images/card-1.svg",
   musicUrl = "/musics/Delicate Weapon.mp3",
-  isPlaying = true,
+  isPlaying = false,
   isFavorite = true,
   progress = 0,
   totalDuration = 199, // 3:19 in seconds
   currentTime = 0,
   onPlayPause = () => {},
+  cardId = null,
+  currentlyPlayingId = null,
 }) => {
   const router = useRouter();
+  const [duration, setDuration] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const wavesurferRef = useRef(null);
+  const waveformRef = useRef(null);
+
+  // Check if this specific card is currently playing
+  const isThisCardPlaying = cardId === currentlyPlayingId && isPlaying;
+
+  // Initialize wavesurfer
+  useEffect(() => {
+    if (waveformRef.current && !wavesurferRef.current) {
+      const wavesurfer = WaveSurfer.create({
+        container: waveformRef.current,
+        waveColor: "rgb(255, 195, 176)",
+        progressColor: "rgb(233, 107, 68)",
+        cursorColor: "rgb(233, 107, 68)",
+        barWidth: 2,
+        barGap: 3,
+        barRadius: 2,
+        height: 38,
+        url: musicUrl,
+        responsive: true,
+        normalize: true,
+        interact: false,
+        hideScrollbar: true,
+        fillParent: true,
+        barMinHeight: 2,
+        barMaxHeight: 38,
+        cursorWidth: 0,
+        autoCenter: false,
+        autoScroll: false,
+      });
+
+      wavesurferRef.current = wavesurfer;
+
+      // Set up event listeners
+      wavesurfer.on("ready", () => {
+        setDuration(wavesurfer.getDuration());
+        setIsLoading(false);
+        setError(null);
+      });
+
+      wavesurfer.on("audioprocess", () => {
+        // Update progress when playing
+        if (isThisCardPlaying) {
+          const currentTime = wavesurfer.getCurrentTime();
+          // You can add a callback here to update parent state if needed
+        }
+      });
+
+      wavesurfer.on("finish", () => {
+        // Handle when audio finishes
+      });
+
+      wavesurfer.on("error", (error) => {
+        console.error("WaveSurfer error:", error);
+        setError("Failed to load audio file");
+        setIsLoading(false);
+      });
+
+      // Cleanup function
+      return () => {
+        if (wavesurferRef.current) {
+          wavesurferRef.current.destroy();
+          wavesurferRef.current = null;
+        }
+      };
+    }
+  }, [musicUrl, isThisCardPlaying]);
+
+  // Update wavesurfer when playing state changes
+  useEffect(() => {
+    if (wavesurferRef.current) {
+      if (isThisCardPlaying) {
+        wavesurferRef.current.play();
+      } else {
+        wavesurferRef.current.pause();
+      }
+    }
+  }, [isThisCardPlaying]);
+
+  const handlePlayPause = () => {
+    onPlayPause();
+  };
+
   return (
     <div
       className={`w-full max-w-[343px] lg:max-w-[654px] min-h-[197px] lg:min-h-[240px] rounded-xl p-2 
         shadow-[0px_-2px_22.5px_0px_rgba(0,0,0,0.12)] bg-white 
-    ${isPlaying ? "border-[3px] border-[#E44615]" : "border-none"}`}
+    ${isThisCardPlaying ? "border-[3px] border-[#E44615]" : "border-none"}`}
     >
       <div className="w-full flex items-center gap-2">
         {/* redirect to music page */}
@@ -80,12 +168,26 @@ const MusicCard = ({
             <p className="mt-5 text-[14px] font-archivo font-[500] leading-[1.15] text-[#0A1113]">
               {formatTime(currentTime)}
             </p>
-            {/* music bars */}
-            <MusicBars
-              progress={progress}
-              totalDuration={totalDuration}
-              isPlaying={isPlaying}
-            />
+            {/* music bars - replaced with WaveSurfer */}
+            <div className="flex-1 h-[38px] flex items-center">
+              {isLoading && !error && (
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="text-[#E96B44] text-xs">Loading...</div>
+                </div>
+              )}
+              {error && (
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="text-red-500 text-xs">Error</div>
+                </div>
+              )}
+              <div
+                ref={waveformRef}
+                className="w-full h-full"
+                style={{
+                  display: isLoading || error ? "none" : "block",
+                }}
+              />
+            </div>
             <p className="mt-5 text-[14px] font-archivo font-[500] leading-[1.15] text-[#0A1113]">
               {formatTime(totalDuration)}
             </p>
@@ -105,12 +207,12 @@ const MusicCard = ({
             <div className="w-full max-w-[104px] flex items-center gap-2">
               {/* play / pause button */}
               <button
-                onClick={onPlayPause}
+                onClick={handlePlayPause}
                 className="cursor-pointer w-12 h-12 rounded-xl p-[14px] bg-[#11252A]  flex items-center justify-center"
               >
                 <Image
                   src={
-                    isPlaying
+                    isThisCardPlaying
                       ? "/assets/icons/pause.svg"
                       : "/assets/icons/play.svg"
                   }

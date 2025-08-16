@@ -81,6 +81,7 @@ const musicList = [
 const MusicLists = () => {
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentlyPlayingId, setCurrentlyPlayingId] = useState(null);
   const totalDuration = 199; // 3:19 in seconds
 
   // Simulate music progress when playing
@@ -91,6 +92,7 @@ const MusicLists = () => {
         setProgress((prev) => {
           if (prev >= totalDuration) {
             setIsPlaying(false);
+            setCurrentlyPlayingId(null);
             return totalDuration;
           }
           return prev + 1;
@@ -100,11 +102,24 @@ const MusicLists = () => {
     return () => clearInterval(interval);
   }, [isPlaying, progress, totalDuration]);
 
-  const handlePlayPause = () => {
-    if (progress >= totalDuration) {
-      setProgress(0);
+  const handlePlayPause = (cardId) => {
+    if (currentlyPlayingId === cardId) {
+      // Same card clicked - toggle play/pause
+      if (isPlaying) {
+        setIsPlaying(false);
+        setCurrentlyPlayingId(null);
+      } else {
+        setIsPlaying(true);
+        setCurrentlyPlayingId(cardId);
+      }
+    } else {
+      // Different card clicked - start playing new card
+      if (progress >= totalDuration) {
+        setProgress(0);
+      }
+      setIsPlaying(true);
+      setCurrentlyPlayingId(cardId);
     }
-    setIsPlaying(!isPlaying);
   };
 
   return (
@@ -115,11 +130,13 @@ const MusicLists = () => {
         {musicList.map((music) => (
           <MusicCard
             key={music.id}
+            cardId={music.id}
+            currentlyPlayingId={currentlyPlayingId}
             isPlaying={isPlaying}
             progress={progress}
             totalDuration={totalDuration}
             currentTime={progress}
-            onPlayPause={handlePlayPause}
+            onPlayPause={() => handlePlayPause(music.id)}
             {...music}
           />
         ))}
@@ -130,11 +147,13 @@ const MusicLists = () => {
         {musicList.map((music) => (
           <MobileMusicCard
             key={music.id}
+            cardId={music.id}
+            currentlyPlayingId={currentlyPlayingId}
             isPlaying={isPlaying}
             progress={progress}
             totalDuration={totalDuration}
             currentTime={progress}
-            onPlayPause={handlePlayPause}
+            onPlayPause={() => handlePlayPause(music.id)}
             {...music}
           />
         ))}

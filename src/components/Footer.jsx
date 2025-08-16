@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-const DesktopFooter = ({ isPlaying = false, isFavorite=false }) => {
+const DesktopFooter = ({ isPlaying = false, isFavorite = false }) => {
   return (
     <div className="hidden lg:flex w-full max-w-[1440px] py-[15px] items-center justify-between gap-[48px]">
       <div className="w-full max-w-[368px] flex items-center justify-between">
@@ -22,7 +22,11 @@ const DesktopFooter = ({ isPlaying = false, isFavorite=false }) => {
         </div>
         <div className="w-[36px] h-[36px] flex items-center justify-center rounded-xl bg-white cursor-pointer">
           <Image
-            src={isFavorite ? "/assets/icons/heart-red.svg" : "/assets/icons/heart.svg"}
+            src={
+              isFavorite
+                ? "/assets/icons/heart-red.svg"
+                : "/assets/icons/heart.svg"
+            }
             alt=""
             width={24}
             height={24}
@@ -77,7 +81,7 @@ const DesktopFooter = ({ isPlaying = false, isFavorite=false }) => {
   );
 };
 
-const MobileFooter = ({ isPlaying = false, isFavorite=true }) => {
+const MobileFooter = ({ isPlaying = false, isFavorite = true }) => {
   return (
     <div className="block lg:hidden w-full py-4">
       <div className="w-full flex items-center justify-between mb-2">
@@ -100,7 +104,11 @@ const MobileFooter = ({ isPlaying = false, isFavorite=true }) => {
           {/* favorite */}
           <button className="cursor-pointer w-11 h-11 rounded-xl p-[12px] bg-[#E7E9EA] flex items-center justify-center">
             <Image
-              src={isFavorite ? "/assets/icons/heart-red.svg" : "/assets/icons/heart.svg"}
+              src={
+                isFavorite
+                  ? "/assets/icons/heart-red.svg"
+                  : "/assets/icons/heart.svg"
+              }
               alt="heart"
               width={20}
               height={20}
@@ -109,14 +117,17 @@ const MobileFooter = ({ isPlaying = false, isFavorite=true }) => {
           </button>
         </div>
         {/* sound */}
-        <div className="cursor-pointer w-10 h-10 flex items-center justify-center">
-          <Image
-            src="/assets/icons/volume-2.svg"
-            alt=""
-            width={24}
-            height={24}
-            className="w-[24px] h-[24px] cursor-pointer"
-          />
+        <div className="w-full max-w-[141] h-10 flex items-center gap-[8px] py-2">
+          <div className="cursor-pointer w-10 h-10 flex items-center justify-center">
+            <Image
+              src="/assets/icons/volume-2.svg"
+              alt=""
+              width={24}
+              height={24}
+              className="w-[24px] h-[24px] cursor-pointer"
+            />
+          </div>
+          <div className="w-full max-w-[93px] h-1 bg-[#CECFD0]  cursor-pointer"></div>
         </div>
       </div>
       <div className="w-full flex flex-col gap-[2px]">
