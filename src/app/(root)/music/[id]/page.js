@@ -400,7 +400,7 @@ const MusicPage = () => {
         {/*  */}
         <div className="w-full max-w-[415px] flex flex-col gap-6">
           <div
-            className="w-full max-w-[343px] lg:max-w-[415px] h-[68px] lg:h-[126px] rounded-xl flex items-center justify-center"
+            className="w-full max-w-[415px] h-[68px] lg:h-[126px] rounded-xl flex items-center justify-center"
             style={{
               backgroundColor: "rgba(255, 255, 255, 0.44)",
             }}
